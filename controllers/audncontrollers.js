@@ -33,3 +33,13 @@ exports.getSongByGenre = async (req, res) => {
         res.status(400).json({error: error.message})
     }
 }
+
+//Canciones y artistas limit 20
+exports.getSongsAndArtists20 = async (req, res) => {
+    try {
+const resultado = await knex.select('*').from("Song").innerJoin("Artists", 'Song.id_artist', 'Artists.id_artist').limit(20).orderByRaw('RANDOM()');
+    res.status(200).json({SongsArtists: resultado})
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
+}
