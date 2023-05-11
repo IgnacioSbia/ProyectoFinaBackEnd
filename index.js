@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const audnroutes = require("./routes/audnroutes")
+const cors = require("cors");
 
 //servidor
 const app = express();
@@ -9,6 +10,7 @@ const app = express();
 
 //middleware
 app.use(bodyParser.json());
+app.use(cors());
 
 //colocar rutas
 app.use('/api', audnroutes)
