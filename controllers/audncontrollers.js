@@ -22,3 +22,14 @@ exports.getSongByArtist = async (req, res) => {
         res.status(400).json({error: error.message})
     }
 }
+
+// Obtener canciones por genero QUERY
+exports.getSongByGenre = async (req, res) => {
+    const queryId = Number(req.query.id);
+    try {
+        const resultado = await knex.select('*').from("Song").innerJoin("Genres", 'Genres.id_genre', 'Song.id_genre').where('Genres.id_genre', queryId);
+        res.status(200).json({resultado})
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
+}
