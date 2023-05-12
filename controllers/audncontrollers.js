@@ -79,13 +79,13 @@ exports.getUser = async(req,res)=>{
 }
 exports.loginTo = async(req, res)=>{
 
-    const resultado = await knex.select('user_name','pw').from("User").where({
+    const resultado = await knex.select('id_user','user_name','pw').from("User").where({
         user_name: req.body.name
     });
-
+    console.log(resultado)
     try{
         if(await bcrypt.compare(req.body.password, resultado[0].pw)){
-           
+            const id_user = resultado[0].id_user
             const token = jwt.sign(
                 {
                   name: resultado[0].user_name,
@@ -96,7 +96,10 @@ exports.loginTo = async(req, res)=>{
               res.status(200).json({
                 mensaje: "El usuario se ha logeado correctamente",
                 token: token,
+                id_user: id_user,
               });
+              console.log(token)
+              console.log(id_user)
         }else{
             res.json({message:'Not Alloweed'})
         }
@@ -106,11 +109,11 @@ exports.loginTo = async(req, res)=>{
 }
 exports.addSongToPlaylist = async(req,res)=>{
     try{
-        knex('User')
+        knex('Playlists')
          .insert({
-            user_name : newUser.names,
-            mail : newUser.mail,
-            pw : password
+            id_song: req.body.song,
+            id_user: req.body.userid,
+            playlist_name: req.body.playlistname
          })
          .then(res.json({mensaje: "success!"}))
          
@@ -120,3 +123,31 @@ exports.addSongToPlaylist = async(req,res)=>{
     }   
 }
 
+exports.getPlaylistsofUser = async(req,res)=>{
+    try{
+    const resultado = await knex.select('*').from("Playlists").where({
+        id_user: req.query.iduser
+    });
+    
+    res.status(200).json({resultado})
+    }catch(error){
+        res.status(400).json({error: error.message})
+    }
+}
+
+
+
+exports.createNewPlaylists = async(req,res)=>{
+    try{
+        knex('Playlists')
+         .insert({
+            id_user: req.body.userid,
+            playlist_name: req.body.playlistname
+         })
+         .then(res.json({mensaje: "success!"}))
+         
+         
+    }catch(error){
+        res.json({error:error.message})
+}
+}
