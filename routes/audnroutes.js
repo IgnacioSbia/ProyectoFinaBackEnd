@@ -1,6 +1,7 @@
 const express = require("express");
 const routes = express.Router();
-const { getSongsAndArtists, getSongByArtist, getSongByGenre, getSongsAndArtists20 } = require("../controllers/audncontrollers")
+const { getSongsAndArtists, getSongByArtist, getSongByGenre, getSongsAndArtists20, regUser, getUser, loginTo, addSongToPlaylist, getPlaylistsofUser, createNewPlaylists } = require("../controllers/audncontrollers");
+const { verifyToken } = require("../Middlewares/authUser");
 
 //Obtener Canciones y Artistas
 
@@ -12,6 +13,18 @@ routes.get('/songbyartist', getSongByArtist)
 
 // obtener canciones de un genero por ID QUERY
 routes.get('/songbygenre', getSongByGenre)
+//GetUsuarios
+routes.get('/userlist',verifyToken, getUser)
+//Registrarse
+routes.post('/register', regUser)
+//Login
+routes.post('/login',loginTo)
+//AddSongToPlaylist
+routes.post('/addSong',verifyToken,addSongToPlaylist)
+//getPlaylists
+routes.get('/playlistsuser',verifyToken,getPlaylistsofUser)
+//createPlaylists
+routes.post('/createPlaylist',verifyToken,createNewPlaylists)
 
 //export
 module.exports = routes;
