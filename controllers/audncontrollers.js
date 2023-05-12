@@ -136,18 +136,13 @@ exports.getPlaylistsofUser = async(req,res)=>{
 }
 
 
+//Creando una playlist
 
-exports.createNewPlaylists = async(req,res)=>{
-    try{
-        knex('Playlists')
-         .insert({
-            id_user: req.body.userid,
-            playlist_name: req.body.playlistname
-         })
-         .then(res.json({mensaje: "success!"}))
-         
-         
-    }catch(error){
-        res.json({error:error.message})
-}
-}
+exports.postPlaylist = async (req, res) => {
+    try {
+      await knex("Playlists").insert(req.body);
+      res.status(200).json({ message: "Ok" });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
