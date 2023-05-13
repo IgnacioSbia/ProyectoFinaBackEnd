@@ -6,7 +6,8 @@ const jwt = require('jsonwebtoken')
 //Canciones y artistas
 exports.getSongsAndArtists = async (req, res) => {
     try {
-const resultado = await knex.select('*').from("Song").innerJoin("Artists", 'Song.id_artist', 'Artists.id_artist');
+    const resultado = await knex.select('*').from("Song").innerJoin("Artists", 'Song.id_artist', 'Artists.id_artist');
+    console.log(resultado)
     res.status(200).json({SongsArtists: resultado})
     } catch (error) {
         res.status(400).json({error: error.message})
@@ -109,11 +110,10 @@ exports.loginTo = async(req, res)=>{
 }
 exports.addSongToPlaylist = async(req,res)=>{
     try{
-        knex('Playlists')
+       knex('PlaylistSongs')
          .insert({
             id_song: req.body.song,
-            id_user: req.body.userid,
-            playlist_name: req.body.playlistname
+            id_playlist: req.body.playlistid
          })
          .then(res.json({mensaje: "success!"}))
          
@@ -125,10 +125,18 @@ exports.addSongToPlaylist = async(req,res)=>{
 
 exports.getPlaylistsofUser = async(req,res)=>{
     try{
-    const resultado = await knex.select('*').from("Playlists").where({
-        id_user: req.query.iduser
-    });
-    
+    const resultado = await knex.select('*').from("Playlists").innerJoin("User", 'Playlists.id_user', 'User.id_user').where('Playlists.id_user', req.query.iduser);
+    const resultadoid = await knex.select('*').from("Playlists").where('Playlists.id_user', req.query.iduser);
+
+    res.status(200).json({resultado, resultadoid})
+    }catch(error){
+        res.status(400).json({error: error.message})
+    }
+}
+exports.getPlaylistsofUser2 = async(req,res)=>{
+    try{
+    const resultado = await knex.select('*').from("Playlists").where('Playlists.id_user', req.query.iduser);
+   
     res.status(200).json({resultado})
     }catch(error){
         res.status(400).json({error: error.message})
@@ -150,4 +158,22 @@ exports.createNewPlaylists = async(req,res)=>{
     }catch(error){
         res.json({error:error.message})
 }
+}
+exports.getArtists = async(req,res)=>{
+    try{
+        const resultado = await knex.select('*').from('Artists');
+
+        res.status(200).json({resultado})
+    }catch(error){
+        res.status(400).json({error:error.message})
+    }
+}
+exports.getSongByArtists = async (req, res) => {
+    const queryId = [req.body.artist];
+    try {
+        const resultado = await knex.select('*').from("Song").innerJoin("Artists", 'Artists.id_artist', 'Song.id_artist').where('Artists.id_artist', queryId);
+        res.status(200).json({resultado})
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
 }
