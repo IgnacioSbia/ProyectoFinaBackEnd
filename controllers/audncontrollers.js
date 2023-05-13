@@ -74,10 +74,21 @@ exports.getUser = async(req,res)=>{
     try {
         const resultado = await knex.select('*').from("User");
         res.status(200).json({resultado})
+
     } catch (error) {
         res.status(400).json({error: error.message})
     }
 }
+
+exports.getGeneros = async (req, res) => {
+try {
+    const result = await knex.select("genre").from("Genres")
+    res.status(200).json({genre : result})
+} catch (error) {
+      res.status(400).json({ error: error.message})
+}
+}
+
 exports.loginTo = async(req, res)=>{
 
     const resultado = await knex.select('id_user','user_name','pw').from("User").where({
@@ -144,21 +155,17 @@ exports.getPlaylistsofUser2 = async(req,res)=>{
 }
 
 
+//Creando una playlist
 
-exports.createNewPlaylists = async(req,res)=>{
-    try{
-        knex('Playlists')
-         .insert({
-            id_user: req.body.userid,
-            playlist_name: req.body.playlistname
-         })
-         .then(res.json({mensaje: "success!"}))
-         
-         
-    }catch(error){
-        res.json({error:error.message})
-}
-}
+exports.postPlaylist = async (req, res) => {
+    try {
+      await knex("Playlists").insert(req.body);
+      res.status(200).json({ message: "Ok" });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
+
 exports.getArtists = async(req,res)=>{
     try{
         const resultado = await knex.select('*').from('Artists');
@@ -177,3 +184,4 @@ exports.getSongByArtists = async (req, res) => {
         res.status(400).json({error: error.message})
     }
 }
+
