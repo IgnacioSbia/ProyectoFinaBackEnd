@@ -13,4 +13,4 @@ exports.verifyToken = (req, res, next) => {
   } catch (error) {
     res.status(400).json({ error: "El token es invalido", mensaje: error });
   }
-};
+};  
