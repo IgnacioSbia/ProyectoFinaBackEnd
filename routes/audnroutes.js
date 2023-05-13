@@ -1,6 +1,6 @@
 const express = require("express");
 const routes = express.Router();
-const { getSongsAndArtists, getSongByArtist, getSongByGenre, getSongsAndArtists20 } = require("../controllers/audncontrollers")
+const { getSongsAndArtists, getSongByArtist, getSongByGenre, getSongsAndArtists20, getGeneros} = require("../controllers/audncontrollers")
 
 //Obtener Canciones y Artistas
 
@@ -12,6 +12,10 @@ routes.get('/songbyartist', getSongByArtist)
 
 // obtener canciones de un genero por ID QUERY
 routes.get('/songbygenre', getSongByGenre)
+
+//obtener lista de generos
+routes.get('/generos', getGeneros);
+
 
 //export
 module.exports = routes;

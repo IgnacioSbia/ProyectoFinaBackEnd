@@ -43,3 +43,20 @@ const resultado = await knex.select('*').from("Song").innerJoin("Artists", 'Song
         res.status(400).json({error: error.message})
     }
 }
+
+exports.getSongsAndArtists = async (req, res) => {
+    try {
+const resultado = await knex.select('*').from("Song").innerJoin("Artists", 'Song.id_artist', 'Artists.id_artist');
+    res.status(200).json({SongsArtists: resultado})
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
+}
+exports.getGeneros = async (req, res) => {
+try {
+    const result = await knex.select("genre").from("Genres")
+    res.status(200).json({genre : result})
+} catch (error) {
+      res.status(400).json({ error: error.message})
+}
+}
