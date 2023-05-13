@@ -169,7 +169,7 @@ exports.getArtists = async(req,res)=>{
     }
 }
 exports.getSongByArtists = async (req, res) => {
-    const queryId = [req.body.artist];
+    const queryId = req.body.artist;
     try {
         const resultado = await knex.select('*').from("Song").innerJoin("Artists", 'Artists.id_artist', 'Song.id_artist').where('Artists.id_artist', queryId);
         res.status(200).json({resultado})
