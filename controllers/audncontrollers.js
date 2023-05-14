@@ -176,7 +176,7 @@ exports.getArtists = async(req,res)=>{
     }
 }
 exports.getSongByArtists = async (req, res) => {
-    const queryId = [req.body.artist];
+    const queryId = req.query.artist;
     try {
         const resultado = await knex.select('*').from("Song").innerJoin("Artists", 'Artists.id_artist', 'Song.id_artist').where('Artists.id_artist', queryId);
         res.status(200).json({resultado})
@@ -184,4 +184,57 @@ exports.getSongByArtists = async (req, res) => {
         res.status(400).json({error: error.message})
     }
 }
+exports.getPlalistByName = async(req,res) => {
+    try{
+        const resultado = await knex.select('id_playlist').from("Playlists").where('Playlists.playlist_name', req.query.playlistname);
+       
+        res.status(200).json({resultado})
+        }catch(error){
+            res.status(400).json({error: error.message})
+        }
+}
+exports.insertIntoPlaylistbyArtist = async(req,res)=>{
+    try{
+     await  knex('Song')
+          .select('*')
+          .where('id_artist', req.body.artist)
+          .then((result)=>{
+            const songs = result.map((id) => ({ id_song: id.id_song, id_playlist: req.body.playlistid }));
 
+            return knex('PlaylistSongs').insert(songs)
+          })
+          
+          res.status(200).json({mensaje: "success!"})
+          
+          
+     }catch(error){
+        res.status(400).json({mensaje: "success!"})
+     }   
+}
+exports.deletePlaylistSongs = async(req,res)=>{
+    try{
+      await knex('PlaylistSongs','Playlists')
+            .where('id_playlist', req.body.idplaylist)
+            .del()
+    
+        await knex('Playlists')
+            .where('id_playlist', req.body.idplaylist)
+            .del()
+        .then(res.json({mensaje:"success!"}))
+
+    }catch(error){
+       res.status(400).json({mensaje:error.message})
+    }
+}
+exports.getSongByPlaylistId = async(req,res)=>{
+    try{
+        const resultado = await knex.select('*').from("PlaylistSongs")
+        .innerJoin("Song", 'Song.id_song', 'PlaylistSongs.id_song')
+        .innerJoin("Artists",'Artists.id_artist', 'Song.id_artist')
+        .where('PlaylistSongs.id_playlist', req.query.playlistid);
+       
+        res.status(200).json({resultado})
+        }catch(error){
+            res.status(400).json({error: error.message})
+        }
+}
