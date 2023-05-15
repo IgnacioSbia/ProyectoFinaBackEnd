@@ -1,7 +1,7 @@
 const express = require("express");
 const routes = express.Router();
 
-const { getSongsAndArtists, getSongByArtist, getSongByGenre, getSongsAndArtists20, regUser, getUser, loginTo, addSongToPlaylist, getPlaylistsofUser, postPlaylist, getGeneros, getPlaylistsofUser2, getArtists, getSongByArtists, getPlalistByName, insertIntoPlaylistbyArtist, deletePlaylistSongs, getSongByPlaylistId, insertIntoPlaylistbyGenre } = require("../controllers/audncontrollers");
+const { getSongsAndArtists, getSongByArtist, getSongByGenre, getSongsAndArtists20, regUser, getUser, loginTo, addSongToPlaylist, getPlaylistsofUser, postPlaylist, getGeneros, getPlaylistsofUser2, getArtists, getSongByArtists, getPlalistByName, insertIntoPlaylistbyArtist, deletePlaylistSongs, getSongByPlaylistId, insertIntoPlaylistbyGenre, getUserbyId } = require("../controllers/audncontrollers");
 
 
 
@@ -45,6 +45,8 @@ routes.delete('/deletePlaylistById',verifyToken,deletePlaylistSongs)
 routes.get('/PlaylistSongs', verifyToken,getSongByPlaylistId)
 //InsertIntoPlaylistByGenre
 routes.post('/InsertByGenre', verifyToken,insertIntoPlaylistbyGenre)
+//GetUserById
+routes.get('/getUserbyId', verifyToken,getUserbyId)
 
 
 //export
