@@ -256,3 +256,12 @@ exports.insertIntoPlaylistbyGenre = async(req,res)=>{
         res.status(400).json({mensaje: error.message})
      }   
 }
+exports.getUserbyId = async(req, res)=>{
+    try {
+        const resultado = await knex.select('*').from("User").where('id_user', req.query.userid);
+        res.status(200).json({resultado})
+
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
+}
