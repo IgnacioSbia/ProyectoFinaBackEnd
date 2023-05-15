@@ -82,8 +82,8 @@ exports.getUser = async(req,res)=>{
 
 exports.getGeneros = async (req, res) => {
 try {
-    const result = await knex.select("genre").from("Genres")
-    res.status(200).json({genre : result})
+    const result = await knex.select("*").from("Genres")
+    res.status(200).json({result})
 } catch (error) {
       res.status(400).json({ error: error.message})
 }
@@ -237,4 +237,22 @@ exports.getSongByPlaylistId = async(req,res)=>{
         }catch(error){
             res.status(400).json({error: error.message})
         }
+}
+exports.insertIntoPlaylistbyGenre = async(req,res)=>{
+    try{
+     await  knex('Song')
+          .select('*')
+          .where('id_genre', req.body.genreid)
+          .then((result)=>{
+            const songs = result.map((id) => ({ id_song: id.id_song, id_playlist: req.body.playlistid }));
+
+            return knex('PlaylistSongs').insert(songs)
+          })
+          
+          res.status(200).json({mensaje: "success!"})
+          
+          
+     }catch(error){
+        res.status(400).json({mensaje: error.message})
+     }   
 }
