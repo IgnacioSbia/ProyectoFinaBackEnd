@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken')
 exports.getSongsAndArtists = async (req, res) => {
     try {
     const resultado = await knex.select('*').from("Song").innerJoin("Artists", 'Song.id_artist', 'Artists.id_artist');
-    console.log(resultado)
+    
     res.status(200).json({SongsArtists: resultado})
     } catch (error) {
         res.status(400).json({error: error.message})
@@ -94,7 +94,7 @@ exports.loginTo = async(req, res)=>{
     const resultado = await knex.select('id_user','user_name','pw').from("User").where({
         user_name: req.body.name
     });
-    console.log(resultado)
+    
     try{
         if(await bcrypt.compare(req.body.password, resultado[0].pw)){
             const id_user = resultado[0].id_user
@@ -110,8 +110,7 @@ exports.loginTo = async(req, res)=>{
                 token: token,
                 id_user: id_user,
               });
-              console.log(token)
-              console.log(id_user)
+              
         }else{
             res.json({message:'Not Alloweed'})
         }
